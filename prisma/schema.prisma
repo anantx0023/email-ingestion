@@ -11,19 +11,45 @@ generator client {
 }
 
 model EmailIngestionConfig {
-  id            Int      @id @default(autoincrement())
-  emailAddress  String   @unique
-  lastChecked   DateTime @default(now())
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  attachments   EmailAttachment[]
+  id             String   @id @default(uuid())
+  emailAddress   String   @unique
+  connectionType String
+  username       String?
+  password       String
+  host           String?
+  port           Int?
+  useSSL         Boolean  @default(true)
+  active         Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  attachments    EmailAttachment[]
 }
 
 model EmailAttachment {
+  id               String   @id @default(uuid())
+  emailConfigId    String
+  fromAddress      String
+  dateReceived     DateTime
+  subject          String
+  attachmentFileName String
+  path             String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  emailConfig      EmailIngestionConfig @relation(fields: [emailConfigId], references: [id])
+}
+
+model emailIngestionConfig {
   id            Int      @id @default(autoincrement())
-  fileName      String
-  filePath      String
-  processedAt   DateTime @default(now())
-  configId      Int
-  config        EmailIngestionConfig @relation(fields: [configId], references: [id])
+  emailAddress  String
+  lastChecked   DateTime
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  active        Boolean
+  connectionType String
+  username      String?
+  password      String?
+  host          String?
+  port          Int?
+  useSSL        Boolean?
 }
