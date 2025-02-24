@@ -48,11 +48,11 @@ const fetchEmails = async () => {
               if (parsed.attachments && parsed.attachments.length > 0) {
                 for (const attachment of parsed.attachments) {
                   if (attachment.contentType === "application/pdf") {
-                    // Create pdfs directory if it doesn't exist
+                    
                     const pdfDir = path.join(process.cwd(), "pdfs");
                     await fs.mkdir(pdfDir, { recursive: true });
 
-                    // Generate unique filename to prevent overwrites
+                    
                     const uniqueFilename = `${Date.now()}-${attachment.filename}`;
                     const pdfPath = path.join(pdfDir, uniqueFilename);
 
@@ -73,24 +73,24 @@ const fetchEmails = async () => {
                 }
               }
 
-              // Mark message as seen after processing
+              
               await connection.addFlags(message.attributes.uid, "\\Seen");
             } catch (messageError) {
               console.error(`Error processing message: ${messageError}`);
-              continue; // Continue with next message even if one fails
+              continue; 
             }
           }
 
           await connection.end();
         } else if (config.connectionType === "GMAIL") {
-          // Implement Gmail API connection and email fetching logic here
+          
         } else if (config.connectionType === "OUTLOOK") {
-          // Implement Outlook/Graph API connection and email fetching logic here
+          
         }
-        // Add more connection types as needed
+        
       } catch (configError) {
         console.error(`Error processing config ${config.emailAddress}: ${configError}`);
-        continue; // Continue with next config even if one fails
+        continue; 
       }
     }
   } catch (error) {

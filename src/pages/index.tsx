@@ -39,7 +39,7 @@ export default function Home() {
       setPort("");
       setConnectionType("IMAP");
       setError("");
-      // Optionally, you can refetch the configurations to update the list
+      
       const updatedConfigs = await fetch("/api/email-ingestion/config").then((res) => res.json());
       setConfigs(updatedConfigs);
     } catch (error) {
