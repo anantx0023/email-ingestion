@@ -3,7 +3,13 @@ import { useState, useEffect } from "react";
 import styles from './index.module.css';
 
 export default function Home() {
-  const [configs, setConfigs] = useState([]);
+  interface Config {
+    id: string;
+    emailAddress: string;
+    connectionType: string;
+  }
+
+  const [configs, setConfigs] = useState<Config[]>([]);
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -44,7 +50,11 @@ export default function Home() {
       setConfigs(updatedConfigs);
     } catch (error) {
       console.error("Failed to add configuration", error);
-      setError(error.message);
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unknown error occurred");
+      }
     }
   };
 

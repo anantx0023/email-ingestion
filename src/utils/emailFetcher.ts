@@ -8,13 +8,18 @@ const prisma = new PrismaClient();
 
 const fetchEmails = async () => {
   try {
-    const emailConfigs: { id: number; emailAddress: string; lastChecked: Date; createdAt: Date; updatedAt: Date; connectionType: string; username?: string; password?: string; host?: string; port?: number; useSSL?: boolean; }[] = await prisma.emailIngestionConfig.findMany({
-      where: { active: true },
+    const emailConfigs: { id: string; emailAddress: string; lastChecked?: Date; createdAt: Date; updatedAt: Date; connectionType: string; username?: string; password?: string; host?: string; port?: number; useSSL?: boolean; active: boolean; }[] = await prisma.emailIngestionConfig.findMany({
+        where: { active: true },
     });
 
     for (const config of emailConfigs) {
       try {
         if (config.connectionType === "IMAP" || config.connectionType === "POP3") {
+          if (!config.password || !config.host || !config.port) {
+            console.error(`Missing configuration for ${config.emailAddress}`);
+            continue;
+          }
+
           const imapConfig = {
             imap: {
               user: config.username || config.emailAddress,

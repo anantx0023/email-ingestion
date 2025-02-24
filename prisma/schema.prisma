@@ -20,6 +20,7 @@ model EmailIngestionConfig {
   port           Int?
   useSSL         Boolean  @default(true)
   active         Boolean  @default(true)
+  lastChecked    DateTime?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   attachments    EmailAttachment[]
@@ -37,19 +38,4 @@ model EmailAttachment {
   updatedAt        DateTime @updatedAt
 
   emailConfig      EmailIngestionConfig @relation(fields: [emailConfigId], references: [id])
-}
-
-model emailIngestionConfig {
-  id            Int      @id @default(autoincrement())
-  emailAddress  String
-  lastChecked   DateTime
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  active        Boolean
-  connectionType String
-  username      String?
-  password      String?
-  host          String?
-  port          Int?
-  useSSL        Boolean?
 }
